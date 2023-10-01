@@ -1,4 +1,4 @@
-package io.github.wh201906.landport;
+package io.github.wh201906.lanpo;
 
 import android.content.Context;
 
@@ -23,6 +23,6 @@ public class ExampleInstrumentedTest
     {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        assertEquals("io.github.wh201906.landport", appContext.getPackageName());
+        assertEquals("io.github.wh201906.lanpo", appContext.getPackageName());
     }
 }

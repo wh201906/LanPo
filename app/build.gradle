@@ -3,12 +3,12 @@ plugins {
 }
 
 android {
-    namespace 'io.github.wh201906.landport'
+    namespace 'io.github.wh201906.lanpo'
     compileSdk 31
 
     defaultConfig {
-        applicationId "io.github.wh201906.landport"
-        minSdk 18
+        applicationId "io.github.wh201906.lanpo"
+        minSdk 14
         targetSdk 31
         versionCode 1
         versionName "1.0"
