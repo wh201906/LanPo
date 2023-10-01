@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">LanPo</string>
+    <string name="toast_no_permission">No permission</string>
+    <string name="toast_permission_granted">Permission granted</string>
+    <string name="toast_permission_denied">Cannot get permission</string>
 </resources>

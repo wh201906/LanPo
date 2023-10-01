@@ -1,7 +1,9 @@
 package io.github.wh201906.lanpo;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.PixelFormat;
@@ -11,23 +13,20 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 
+import androidx.core.app.NotificationCompat;
+
 public class FloatingService extends Service
 {
     private View overlayView;
     private LayoutParams overlayLayoutParams;
+    private Notification notification;
+    private boolean viewAdded = false;
 
     @Override
     public void onCreate()
     {
         super.onCreate();
-        WindowManager windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
-        Context displayCtx = createDisplayContext(windowManager.getDefaultDisplay());
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
-        {
-            displayCtx = displayCtx.createWindowContext(LayoutParams.TYPE_APPLICATION_OVERLAY, null);
-        }
-
-        overlayView = new View(displayCtx);
+        overlayView = new View(this);
 
         overlayLayoutParams = new LayoutParams(
                 0, 0, 0, 0,
@@ -44,14 +43,21 @@ public class FloatingService extends Service
         }
         overlayLayoutParams.screenOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
 
-
+        notification = createNotification();
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        WindowManager windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
-        windowManager.addView(overlayView, overlayLayoutParams);
-        return super.onStartCommand(intent, flags, startId);
+    public int onStartCommand(Intent intent, int flags, int startId)
+    {
+        super.onStartCommand(intent, flags, startId);
+        if (!viewAdded)
+        {
+            WindowManager windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
+            windowManager.addView(overlayView, overlayLayoutParams);
+            viewAdded = true;
+        }
+        startForeground(1, notification);
+        return START_STICKY;
     }
 
     @Override
@@ -59,5 +65,22 @@ public class FloatingService extends Service
     {
         // TODO: Return the communication channel to the service.
         throw new UnsupportedOperationException("Not yet implemented");
+    }
+
+    private Notification createNotification()
+    {
+        String appName = getString(R.string.app_name);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, appName)
+                .setContentTitle(appName)
+                .setContentText(appName)
+                .setSmallIcon(R.mipmap.ic_launcher);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        {
+            NotificationChannel channel = new NotificationChannel(appName, appName, NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(channel);
+        }
+
+        return builder.build();
     }
 }
