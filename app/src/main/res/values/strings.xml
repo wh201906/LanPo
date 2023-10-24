@@ -3,4 +3,6 @@
     <string name="toast_no_permission">No permission</string>
     <string name="toast_permission_granted">Permission granted</string>
     <string name="toast_permission_denied">Cannot get permission</string>
+    <string name="notification_exit">Exit</string>
+    <string name="activity_main_exit">Exit</string>
 </resources>

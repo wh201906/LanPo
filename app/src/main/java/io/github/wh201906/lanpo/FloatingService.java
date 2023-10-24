@@ -3,6 +3,7 @@ package io.github.wh201906.lanpo;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -70,10 +71,17 @@ public class FloatingService extends Service
     private Notification createNotification()
     {
         String appName = getString(R.string.app_name);
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.setAction(MainActivity.ACTION_LOAD_MAINACTIVITY);
+        PendingIntent loadActivityPendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        intent.setAction(MainActivity.ACTION_EXIT);
+        PendingIntent exitPendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, appName)
                 .setContentTitle(appName)
                 .setContentText(appName)
-                .setSmallIcon(R.mipmap.ic_launcher);
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentIntent(loadActivityPendingIntent)
+                .addAction(R.mipmap.ic_launcher, getString(R.string.notification_exit), exitPendingIntent);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
         {
             NotificationChannel channel = new NotificationChannel(appName, appName, NotificationManager.IMPORTANCE_DEFAULT);
@@ -82,5 +90,17 @@ public class FloatingService extends Service
         }
 
         return builder.build();
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        if(viewAdded)
+        {
+            WindowManager windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
+            windowManager.removeView(overlayView);
+            viewAdded = false;
+        }
+        super.onDestroy();
     }
 }

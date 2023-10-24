@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">LanPo</string>
+    <string name="toast_no_permission">无权限</string>
+    <string name="toast_permission_granted">已获得权限</string>
+    <string name="toast_permission_denied">无法获得权限</string>
+    <string name="notification_exit">退出</string>
+    <string name="activity_main_exit">退出</string>
+</resources>
